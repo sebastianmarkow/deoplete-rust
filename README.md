@@ -7,8 +7,9 @@
 
 ## Requirements
 
-* [Rust source][rust]
+* [Rust][rust] source
 * [Racer][racer]
+* [Deoplete][deoplete]
 
 ### Install [Racer][racer]
 #### with `cargo`
@@ -23,12 +24,13 @@ Be sure that your cargo directory (e.g. `~/.cargo/bin`) is in your `PATH`.
 Then add racer to your `PATH`.
 e.g. copy `./target/release/racer` to `/usr/local/bin`
 
-### Get [Rust source][rust]
+### Get [Rust][rust] source
     mkdir -p choose/a/path
     git clone https://github.com/rust-lang/rust.git
 
 ## Install
-Add to `init.vim`
+Add [Deoplete][deoplete] to `init.vim`
+See [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
 
 ### with `vim-plug`
     Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust'}
@@ -43,6 +45,8 @@ Add to `init.vim`
 #### `K` Show documentation
 
 #### `gd` Go to definition
+
+#### `:help deoplete-rust` Show help
 
 
 [racer]: https://github.com/phildawes/racer
