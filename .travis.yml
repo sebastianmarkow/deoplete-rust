@@ -1,0 +1,16 @@
+language: python
+
+python:
+  - "3.4"
+  - "3.5"
+  - "nightly"
+
+cache:
+  directories:
+    - "$HOME/.cache/pip"
+
+install:
+  - pip3 install -r requirements.txt
+
+script:
+  - vint **/*.vim
