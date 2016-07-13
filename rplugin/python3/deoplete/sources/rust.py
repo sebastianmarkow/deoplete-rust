@@ -13,7 +13,6 @@ VAR_RUST_SOURCE = 'deoplete#sources#rust#rust_source_path'
 
 class Source(Base):
     """Deoplete Rust source"""
-
     def __init__(self, vim):
         Base.__init__(self, vim)
 
@@ -25,7 +24,7 @@ class Source(Base):
 
         self.__racer = self.vim.vars.get(VAR_RACER_BINARY)
         self.__encoding = self.vim.eval('&encoding')
-        self.__rust_re = re.compile(r'\w*$')
+        self.__rust_re = re.compile(r'\w*$|(?<=")[./\-\w]*$')
 
         if 'RUST_SRC_PATH' not in os.environ:
             rust_path = self.vim.vars.get(VAR_RUST_SOURCE)
@@ -42,29 +41,28 @@ class Source(Base):
 
     def gather_candidates(self, ctx):
         """Missing"""
-
         candidates = []
 
-        lines = self.__retrieve(ctx)
+        lines = self.__retrieve()
         matches = [line[6:] for line in lines if line.startswith('MATCH')]
 
         for match in matches:
-            tokens = match.split(',')
+            tokens = match.split(';')
             candidate = {
                 'word': tokens[0],
-                'kind': tokens[4],
-                'menu': tokens[5],
+                'kind': tokens[5],
+                'menu': tokens[6],
+                'info': tokens[7],  # FIXME(SK): Preview info formatting
                 'dup': 1,
             }
             candidates.append(candidate)
 
         return candidates
 
-    def __retrieve(self, ctx):
+    def __retrieve(self):
         """Missing"""
         content = self.vim.current.buffer
-        line = self.vim.current.window.cursor[0]
-        column = ctx['complete_position']
+        line, column = self.vim.current.window.cursor
 
         with tempfile.NamedTemporaryFile(mode='w') as buf:
             buf.write("\n".join(content))
@@ -72,7 +70,7 @@ class Source(Base):
 
             args = [
                 self.__racer,
-                'complete',
+                'complete-with-snippet',
                 str(line),
                 str(column),
                 content.name,
@@ -84,7 +82,7 @@ class Source(Base):
             try:
                 results = subprocess.check_output(args) \
                     .decode(self.__encoding).splitlines()
-            except subprocess.CalledProcessError:
+            except Exception:
                 pass
 
             return results
