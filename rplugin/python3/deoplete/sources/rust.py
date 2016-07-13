@@ -1,14 +1,15 @@
-"""Rust completion via racer"""
+"""Rust completion via Racer"""
+
 import os
 import re
 import subprocess
 import tempfile
 
 from .base import Base
-from deoplete.logger import getLogger
 
+VAR_RACER_BINARY = 'deoplete#sources#rust#racer_binary'
+VAR_RUST_SOURCE = 'deoplete#sources#rust#rust_source_path'
 
-logger = getLogger('rust')
 
 class Source(Base):
     """Deoplete Rust source"""
@@ -16,42 +17,28 @@ class Source(Base):
     def __init__(self, vim):
         Base.__init__(self, vim)
 
-        self.name = 'Rust'
+        self.name = 'rust'
         self.mark = '[Rust]'
         self.filetypes = ['rust']
-        self.input_pattern = r'(\.|::)\w*'  # XXX(SK): words with digits?
+        self.input_pattern = r'(\.|::)\w*'
         self.rank = 500
-        self.debug_enabled = True
 
-        self.__racer = self.vim.vars.get(
-            'deoplete#sources#rust#racer_binary',
-            ''
-        )
+        self.__racer = self.vim.vars.get(VAR_RACER_BINARY)
+        self.__encoding = self.vim.eval('&encoding')
+        self.__rust_re = re.compile(r'\w*$')
 
         if 'RUST_SRC_PATH' not in os.environ:
-            rust_path = self.vim.vars.get('deoplete#sources#rust#rust_source_path')
-            if rust_path != '':
+            rust_path = self.vim.vars.get(VAR_RUST_SOURCE)
+            if rust_path:
                 os.environ['RUST_SRC_PATH'] = rust_path
-
-        logger.debug(self.__racer)
-        logger.debug(os.environ.get('RUST_SRC_PATH'))
-
-        self.__rust_re = re.compile(r'\w*$')  # XXX(SK): words with digits?
 
     def get_complete_position(self, ctx):
         """Missing"""
         if not self.__check_binary():
-            logger.debug("binary failed")
             return -1
 
         method = self.__rust_re.search(ctx['input'])
-        if method:
-            m = method.start()
-            return m
-        else:
-            return -1
-
-        # return method.start() if method else -1
+        return method.start() if method else -1
 
     def gather_candidates(self, ctx):
         """Missing"""
@@ -66,7 +53,7 @@ class Source(Base):
             candidate = {
                 'word': tokens[0],
                 'kind': tokens[4],
-                'abbr': tokens[5],
+                'menu': tokens[5],
                 'dup': 1,
             }
             candidates.append(candidate)
@@ -74,35 +61,34 @@ class Source(Base):
         return candidates
 
     def __retrieve(self, ctx):
-
+        """Missing"""
         content = self.vim.current.buffer
         line = self.vim.current.window.cursor[0]
         column = ctx['complete_position']
 
-        logger.debug(content[0])
-
         with tempfile.NamedTemporaryFile(mode='w') as buf:
-            buf.write('\n'.join(content))
+            buf.write("\n".join(content))
             buf.flush()
 
             args = [
                 self.__racer,
                 'complete',
-                line,
-                column,
+                str(line),
+                str(column),
+                content.name,
                 buf.name
             ]
 
-            logger.debug(args)
-            logger.debug(os.environ.get('RUST_SRC_PATH'))
+            results = []
 
-            env = os.environ.copy()
+            try:
+                results = subprocess.check_output(args) \
+                    .decode(self.__encoding).splitlines()
+            except subprocess.CalledProcessError:
+                pass
 
-            proc = subprocess.run(["ls", "-l"])
-            proc.kill()
-            logger.debug('after')
-
-        return []
+            return results
 
     def __check_binary(self):
+        """Missing"""
         return os.path.isfile(self.__racer) and os.environ.get('RUST_SRC_PATH')

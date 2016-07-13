@@ -3,6 +3,9 @@ if exists('g:loaded_deoplete_rust')
 endif
 let g:loaded_deoplete_rust=1
 
+let s:save_cpo = &cpo
+set cpo&vim
+
 let g:deoplete#sources#rust#racer_binary=
     \ get(g:, 'deoplete#sources#rust#racer_binary', '')
 
@@ -109,3 +112,6 @@ augroup deoplete-rust
 autocmd!
 autocmd filetype rust call s:DeopleteRustInit()
 augroup end
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
