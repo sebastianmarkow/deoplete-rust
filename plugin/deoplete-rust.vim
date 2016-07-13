@@ -21,9 +21,7 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
         return 1
     endif
 
-    if bufloaded(a:filename) != 0 && bufwinnr(a:filename) != -1
-        execute bufwinnr(a:filename) . 'wincmd w'
-    elseif a:mode ==# 'tab'
+    if a:mode ==# 'tab'
         if bufloaded(a:filename) == 0
             tab split
         endif
@@ -31,6 +29,8 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
         split
     elseif a:mode ==# 'vsplit'
         vsplit
+    elseif  bufloaded(a:filename) != 0 && bufwinnr(a:filename) != -1
+        execute bufwinnr(a:filename) . 'wincmd w'
     endif
 
     exec 'edit '.a:filename
@@ -99,6 +99,12 @@ endfunction
 function! s:DeopleteRustInit()
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinition
         \ :call <sid>DeopleteRustGoToDefinition('')<cr>
+    nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionSplit
+        \ :call <sid>DeopleteRustGoToDefinition('split')<cr>
+    nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionVSplit
+        \ :call <sid>DeopleteRustGoToDefinition('vsplit')<cr>
+    nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionTab
+        \ :call <sid>DeopleteRustGoToDefinition('tab')<cr>
     nnoremap <silent><buffer> <plug>DeopleteRustShowDocumentation
         \ :call <sid>DeopleteRustShowDocumentation()<cr>
 
