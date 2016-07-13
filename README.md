@@ -11,12 +11,12 @@
 * [Racer][racer]
 * [Deoplete][deoplete]
 
-### Install [Racer][racer]
-#### with `cargo`
+#### Install [Racer][racer]
+##### with `cargo`
     cargo install racer
 
 Be sure that your cargo directory (e.g. `~/.cargo/bin`) is in your `PATH`.
-#### from source
+##### from source
     git clone https://github.com/phildawes/racer.git
     cd racer
     cargo build --release
@@ -24,7 +24,7 @@ Be sure that your cargo directory (e.g. `~/.cargo/bin`) is in your `PATH`.
 Then add racer to your `PATH`.
 e.g. copy `./target/release/racer` to `/usr/local/bin`
 
-### Get [Rust][rust] source
+#### Get [Rust][rust] source
     mkdir -p choose/a/path
     git clone https://github.com/rust-lang/rust.git
 
@@ -32,21 +32,27 @@ e.g. copy `./target/release/racer` to `/usr/local/bin`
 Add [Deoplete][deoplete] to `init.vim`
 See [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
 
-### with `vim-plug`
-    Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust'}
+#### with `Vundle`
+    Plugin 'sebastianmarkow/deoplete-rust'
+
+#### with `vim-plug`
+    Plug 'sebastianmarkow/deoplete-rust'
+
+#### with `NeoBundle`
+    NeoBundle 'sebastianmarkow/deoplete-rust'
 
 ## Configuration
-### Path
-### Keymap
+#### Path
+#### Keymap
 
 ## Usage
-### Keymap
+#### Keymap
 
-#### `K` Show documentation
+##### `K` Show documentation
 
-#### `gd` Go to definition
+##### `gd` Go to definition
 
-#### `:help deoplete-rust` Show help
+##### `:help deoplete-rust` Show help
 
 
 [racer]: https://github.com/phildawes/racer
