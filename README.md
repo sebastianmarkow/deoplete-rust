@@ -4,9 +4,7 @@
 
 [Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust].
 
-
 ## Requirements
-
 * [Rust][rust] source
 * [Racer][racer]
 * [Deoplete][deoplete]

@@ -29,7 +29,7 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
         split
     elseif a:mode ==# 'vsplit'
         vsplit
-    elseif  bufloaded(a:filename) != 0 && bufwinnr(a:filename) != -1
+    elseif bufloaded(a:filename) != 0 && bufwinnr(a:filename) != -1
         execute bufwinnr(a:filename) . 'wincmd w'
     endif
 
