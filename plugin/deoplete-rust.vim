@@ -85,11 +85,11 @@ function! s:validEnv()
 endfunction
 
 function! s:DeopleteRustInit()
-    nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinition
     if !s:validEnv()
         return
     endif
 
+    nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionDefault
         \ :call <sid>DeopleteRustGoToDefinition('')<cr>
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionSplit
         \ :call <sid>DeopleteRustGoToDefinition('split')<cr>
@@ -101,7 +101,7 @@ function! s:DeopleteRustInit()
         \ :call <sid>DeopleteRustShowDocumentation()<cr>
 
     if !exists('g:deoplete#sources#rust#disable_keymap')
-        nmap <buffer> gd <plug>DeopleteRustGoToDefinition
+        nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
         nmap <buffer> K  <plug>DeopleteRustShowDocumentation
     endif
 endfunction
