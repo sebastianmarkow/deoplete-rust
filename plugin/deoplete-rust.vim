@@ -39,32 +39,31 @@ function! s:DeopleteRustGoToDefinition(mode)
     if s:checkEnv()
         return
     endif
+    let l:line_nr = line('.')
+    let l:column_nr = col('.')
+    let l:filename = expand('%:p')
+    let l:buf = tempname()
 
-    let line_nr = line('.')
-    let column_nr = col('.')
-    let filename = expand('%:p')
-    let buf = tempname()
+    call writefile(getline(1, '$'), l:buf)
 
-    call writefile(getline(1, '$'), buf)
+    let l:cmd = g:deoplete#sources#rust#racer_binary.' find-definition '.l:line_nr.' '.l:column_nr.' '.l:filename.' '.l:buf
+    let l:result = system(l:cmd)
 
-    let cmd = g:deoplete#sources#rust#racer_binary.' find-definition '.line_nr.' '.column_nr.' '.filename.' '.buf
-    let result = system(cmd)
-
-    for line in split(result, '\\n')
-        if result =~# ' error: ' && line !=? 'end'
-            call s:warn(line)
+    for l:line in split(l:result, '\\n')
+        if l:result =~# ' error: ' && l:line !=? 'end'
+            call s:warn(l:line)
             break
-        elseif line =~? '^MATCH'
-            let info = split(line[6:], ',')
-            let line_nr = info[1]
-            let column_nr = info[2]
-            let filename = info[3]
+        elseif l:line =~? '^MATCH'
+            let l:info = split(l:line[6:], ',')
+            let l:line_nr = l:info[1]
+            let l:column_nr = l:info[2]
+            let l:filename = l:info[3]
 
-            call s:jumpTo(a:mode, filename, line_nr, column_nr+1)
+            call s:jumpTo(a:mode, l:filename, l:line_nr, l:column_nr+1)
             break
         endif
     endfor
-    call delete(buf)
+    call delete(l:buf)
 endfunction
 
 function! s:warn(message)
