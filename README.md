@@ -2,56 +2,103 @@
 
 [![Build Status](http://img.shields.io/travis/sebastianmarkow/deoplete-rust/master.svg?style=flat-square)](https://travis-ci.org/sebastianmarkow/deoplete-rust)
 
-[Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust].
+[Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust]
+via [Racer][racer].
+
 
 ## Requirements
-* [Rust][rust] source
+* [Rust][rust] source code
 * [Racer][racer]
 * [Deoplete][deoplete]
 
-#### Install [Racer][racer]
+#### Install Racer
 ##### with `cargo`
-    cargo install racer
+~~~
+cargo install racer
+~~~
 
-Be sure that your cargo directory (e.g. `~/.cargo/bin`) is in your `PATH`.
 ##### from source
-    git clone https://github.com/phildawes/racer.git
-    cd racer
-    cargo build --release
+~~~
+git clone https://github.com/phildawes/racer.git
+cd racer
+cargo build --release
+~~~
 
-Then add racer to your `PATH`.
-e.g. copy `./target/release/racer` to `/usr/local/bin`
+Copy binary to `./target/release/racer` to location of your choosing.
+(e.g. to `/usr/local/bin`)
 
-#### Get [Rust][rust] source
-    mkdir -p choose/a/path
-    git clone https://github.com/rust-lang/rust.git
+#### Get Rust source code
+~~~
+mkdir -p choose/a/path
+git clone https://github.com/rust-lang/rust.git
+~~~
+
+#### Add Deoplete
+Add [Deoplete][deoplete] to `init.vim`.
+For further details see [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
+
 
 ## Install
-Add [Deoplete][deoplete] to `init.vim`
-See [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
+#### with `vim-plug`
+~~~
+Plug 'sebastianmarkow/deoplete-rust'
+~~~
 
 #### with `Vundle`
-    Plugin 'sebastianmarkow/deoplete-rust'
-
-#### with `vim-plug`
-    Plug 'sebastianmarkow/deoplete-rust'
+~~~
+Plugin 'sebastianmarkow/deoplete-rust'
+~~~
 
 #### with `NeoBundle`
-    NeoBundle 'sebastianmarkow/deoplete-rust'
+~~~
+NeoBundle 'sebastianmarkow/deoplete-rust'
+~~~
+
 
 ## Configuration
-#### Path
-#### Keymap
+Set `racer` binary path (fully qualified path)
+~~~
+let g:deoplete#sources#rust#racer_binary='/path/to/racer'
+~~~
+
+Set Rust source code path (when cloning from Github usually ending on `/src`)
+~~~
+let g:deoplete#sources#rust#rust_source_path='/path/to/rust/src'
+~~~
+
+To disable default key mappings (`gd` & `K`) add the following
+~~~
+let g:deoplete#sources#rust#disable_keymap=1
+~~~
+
 
 ## Usage
-#### Keymap
+#### Default key mappings
+These are the default key mappings
+~~~
+nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
+nmap <buffer> K  <plug>DeopleteRustShowDocumentation
+~~~
+
+Additional methods to bind
+~~~
+DeopleteRustGoToDefinitionSplit  " Open definition in horizontal split
+DeopleteRustGoToDefinitionVSplit " Open definition in vertical split
+DeopleteRustGoToDefinitionTab    " Open definition in new tab
+~~~
 
 ##### `K` Show documentation
+Show brief description of the current element under the cursor.
 
 ##### `gd` Go to definition
+Jump to definition of the current element under the cursor.
 
-##### `:help deoplete-rust` Show help
+##### Show help
+You don't have to remember it all. Just run `:help deoplete-rust`.
 
+## License
+deoplete-rust is licensed under MIT License.
+For additional information, see `LICENSE` file.
 
 [racer]: https://github.com/phildawes/racer
 [neovim]: https://github.com/neovim/neovim
