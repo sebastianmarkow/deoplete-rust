@@ -11,13 +11,13 @@ via [Racer][racer].
 * [Racer][racer]
 * [Deoplete][deoplete]
 
-#### Install Racer
-##### with `cargo`
+### Install Racer
+#### with `cargo`
 ~~~
 cargo install racer
 ~~~
 
-##### from source
+#### from source
 ~~~
 git clone https://github.com/phildawes/racer.git
 cd racer
@@ -27,29 +27,29 @@ cargo build --release
 Copy binary to `./target/release/racer` to location of your choosing.
 (e.g. to `/usr/local/bin`)
 
-#### Get Rust source code
+### Get Rust source code
 ~~~
 mkdir -p choose/a/path
 git clone https://github.com/rust-lang/rust.git
 ~~~
 
-#### Add Deoplete
+### Add Deoplete
 Add [Deoplete][deoplete] to `init.vim`.
 For further details see [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
 
 
 ## Install
-#### with `vim-plug`
+### with `vim-plug`
 ~~~
 Plug 'sebastianmarkow/deoplete-rust'
 ~~~
 
-#### with `Vundle`
+### with `Vundle`
 ~~~
 Plugin 'sebastianmarkow/deoplete-rust'
 ~~~
 
-#### with `NeoBundle`
+### with `NeoBundle`
 ~~~
 NeoBundle 'sebastianmarkow/deoplete-rust'
 ~~~
@@ -73,7 +73,7 @@ let g:deoplete#sources#rust#disable_keymap=1
 
 
 ## Usage
-#### Default key mappings
+### Default key mappings
 These are the default key mappings
 ~~~
 nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
@@ -87,13 +87,13 @@ DeopleteRustGoToDefinitionVSplit " Open definition in vertical split
 DeopleteRustGoToDefinitionTab    " Open definition in new tab
 ~~~
 
-##### `K` Show documentation
-Show brief description of the current element under the cursor.
-
-##### `gd` Go to definition
+#### `gd` Go to definition
 Jump to definition of the current element under the cursor.
 
-##### Show help
+#### `K` Show documentation
+Show brief description of the current element under the cursor.
+
+#### Show help
 You don't have to remember it all. Just run `:help deoplete-rust`.
 
 ## License
