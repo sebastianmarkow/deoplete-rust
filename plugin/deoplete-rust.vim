@@ -36,9 +36,6 @@ function! s:DeopleteRustShowDocumentation()
 endfunction
 
 function! s:DeopleteRustGoToDefinition(mode)
-    if s:checkEnv()
-        return
-    endif
     let l:line_nr = line('.')
     let l:column_nr = col('.')
     let l:filename = expand('%:p')
@@ -70,25 +67,29 @@ function! s:warn(message)
     echohl WarningMsg | echomsg a:message | echohl NONE
 endfunction
 
-function! s:checkEnv()
+function! s:validEnv()
     if !executable(g:deoplete#sources#rust#racer_binary)
         call s:warn('racer binary not found')
-        return 1
+        return 0
     endif
 
     if !isdirectory($RUST_SRC_PATH)
         if !exists('g:deoplete#sources#rust#rust_source_path')
             call s:warn('rust source not found')
-            return 1
+            return 0
         else
             let $RUST_SRC_PATH=g:deoplete#sources#rust#rust_source_path
-            return 0
         endif
     endif
+    return 1
 endfunction
 
 function! s:DeopleteRustInit()
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinition
+    if !s:validEnv()
+        return
+    endif
+
         \ :call <sid>DeopleteRustGoToDefinition('')<cr>
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionSplit
         \ :call <sid>DeopleteRustGoToDefinition('split')<cr>
