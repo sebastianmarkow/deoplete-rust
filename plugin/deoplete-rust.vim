@@ -13,11 +13,6 @@ let g:deoplete#sources#rust#rust_source_path=
     \ get(g:, 'deoplete#sources#rust#rust_source_path', '')
 
 function! s:jumpTo(mode, filename, line_nr, column_nr)
-    if !filereadable(a:filename)
-        call s:warn('error: '.a:filename.' does not exist or is not readable')
-        return 1
-    endif
-
     if a:mode ==# 'tab'
         if bufloaded(a:filename) == 0
             tab split
