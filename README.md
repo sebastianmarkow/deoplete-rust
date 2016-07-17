@@ -1,5 +1,7 @@
 # deoplete-rust
 
+[![Join the chat at https://gitter.im/sebastianmarkow/deoplete-rust](https://badges.gitter.im/sebastianmarkow/deoplete-rust.svg)](https://gitter.im/sebastianmarkow/deoplete-rust?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust]
 via [Racer][racer].
 
