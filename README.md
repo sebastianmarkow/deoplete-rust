@@ -52,6 +52,11 @@ Plugin 'sebastianmarkow/deoplete-rust'
 NeoBundle 'sebastianmarkow/deoplete-rust'
 ~~~
 
+### with `Pathogen`
+~~~
+git clone --depth=1 https://github.com/sebastianmarkow/deoplete-rust.git path/to/vim/bundle/deoplete-rust
+~~~
+
 
 ## Configuration
 Set `racer` binary path (fully qualified path)
