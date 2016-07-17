@@ -1,7 +1,5 @@
 # deoplete-rust
 
-[![Build Status](http://img.shields.io/travis/sebastianmarkow/deoplete-rust/master.svg?style=flat-square)](https://travis-ci.org/sebastianmarkow/deoplete-rust)
-
 [Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust]
 via [Racer][racer].
 
