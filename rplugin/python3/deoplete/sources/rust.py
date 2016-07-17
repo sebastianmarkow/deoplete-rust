@@ -47,7 +47,7 @@ class Source(Base):
         matches = [line[6:] for line in lines if line.startswith('MATCH')]
 
         for match in matches:
-            tokens = match.split(';')
+            tokens = formatDoc(match)
             candidate = {
                 'word': tokens[0],
                 'kind': tokens[5],
@@ -90,3 +90,11 @@ class Source(Base):
     def __check_binary(self):
         """Missing"""
         return os.path.isfile(self.__racer) and os.environ.get('RUST_SRC_PATH')
+
+
+def formatDoc(text):
+    """Missing"""
+    text = text.replace("\;", "{PLACEHOLDER}")
+    parts = text.split(";")
+    parts = list(map(lambda x: x.replace("{PLACEHOLDER}", ";"), parts))
+    return parts
