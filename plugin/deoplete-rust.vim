@@ -12,6 +12,11 @@ let g:deoplete#sources#rust#racer_binary=
 let g:deoplete#sources#rust#rust_source_path=
     \ get(g:, 'deoplete#sources#rust#rust_source_path', '')
 
+let g:deoplete#sources#rust#documentation_max_height=
+    \ get(g:, 'deoplete#sources#rust#documentation_max_height', 20)
+
+let s:buffer_nr=-1
+
 function! s:jumpTo(mode, filename, line_nr, column_nr)
     if a:mode ==# 'tab'
         if bufloaded(a:filename) == 0
@@ -31,20 +36,111 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
     normal! zz
 endfunction
 
+function! s:formatDoc(text)
+    let l:placeholder = '{LITERALSEMICOLON}'
+    let l:line = substitute(a:text, '\\;', l:placeholder, 'g')
+    let l:tokens = split(l:line, ';')
+    let l:desc = substitute(substitute(substitute(substitute(get(l:tokens, 7, ''), '^\"\(.*\)\"$', '\1', ''), '\\\"', '\"', 'g'), '\\''', '''', 'g'), '\\n', '\n', 'g')
+    let l:tokens = add(l:tokens[:6], l:desc)
+    let l:tokens = map(copy(l:tokens), 'substitute(v:val, '''.l:placeholder.''', '';'', ''g'')')
+
+    let l:doc = l:tokens[0].' ['.l:tokens[5]."]\n\n```\n".l:tokens[6]."\n```"
+
+    if l:tokens[7] !=# ''
+        let l:doc = l:doc."\n\n".l:tokens[7]
+    endif
+
+    return l:doc
+endfunction
+
+function! s:openView(mode, position, content)
+    if !bufexists(s:buffer_nr)
+        execute a:mode
+        sil file `='[RustDoc]'`
+        let s:buffer_nr = bufnr('%')
+    elseif bufwinnr(s:buffer_nr) == -1
+        execute a:position
+        execute s:buffer_nr . 'buffer'
+    elseif bufwinnr(s:buffer_nr) != bufwinnr('%')
+        execute bufwinnr(s:buffer_nr) . 'wincmd w'
+    endif
+
+    let l:max_height = g:deoplete#sources#rust#documentation_max_height
+    let l:content_height = len(split(a:content, '\n'))
+
+    if l:content_height > l:max_height
+        execute 'resize '.l:max_height
+    else
+        execute 'resize '.l:content_height
+    endif
+
+    setlocal filetype=rustdoc
+    setlocal bufhidden=delete
+    setlocal buftype=nofile
+    setlocal noswapfile
+    setlocal nobuflisted
+    setlocal nocursorline
+    setlocal nocursorcolumn
+    setlocal iskeyword+=:
+    setlocal iskeyword-=-
+
+    setlocal modifiable
+    %delete _
+    call append(0, split(a:content, '\n'))
+    sil $delete _
+    setlocal nomodifiable
+    sil normal! gg
+
+    noremap <buffer><silent>q :<c-u>close<cr>
+    noremap <buffer><silent><cr> :<c-u>close<cr>
+    noremap <buffer><silent><esc> :<c-u>close<cr>
+endfunction
+
 function! s:DeopleteRustShowDocumentation()
-    call s:warn('show: documentation')
+    let l:view = winsaveview()
+
+    normal! he
+
+    let l:line_nr = line('.')
+    let l:column_nr = col('.')
+    let l:path = expand('%:p')
+    let l:buf = tempname()
+
+    call writefile(getline(1, '$'), l:buf)
+
+    let l:cmd = g:deoplete#sources#rust#racer_binary.' complete-with-snippet '.l:line_nr.' '.l:column_nr.' '.l:path.' '.l:buf
+    let l:result = system(l:cmd)
+
+    call delete(l:buf)
+    call winrestview(l:view)
+
+    for l:line in split(l:result, "\\n")
+        if l:result =~# ' error: ' && l:line !=? 'end'
+            call s:warn(l:line)
+            break
+        elseif l:line =~? '^MATCH'
+            let l:content = s:formatDoc(l:line[6:])
+
+            if l:content !=# ''
+                call s:openView('new', 'split', l:content)
+            endif
+            break
+       endif
+    endfor
 endfunction
 
 function! s:DeopleteRustGoToDefinition(mode)
     let l:line_nr = line('.')
     let l:column_nr = col('.')
-    let l:filename = expand('%:p')
+    let l:path = expand('%:p')
     let l:buf = tempname()
 
     call writefile(getline(1, '$'), l:buf)
 
-    let l:cmd = g:deoplete#sources#rust#racer_binary.' find-definition '.l:line_nr.' '.l:column_nr.' '.l:filename.' '.l:buf
+    let l:cmd = g:deoplete#sources#rust#racer_binary.' find-definition '.l:line_nr.' '.l:column_nr.' '.l:path.' '.l:buf
     let l:result = system(l:cmd)
+
+    call delete(l:buf)
 
     for l:line in split(l:result, '\\n')
         if l:result =~# ' error: ' && l:line !=? 'end'
@@ -60,7 +156,6 @@ function! s:DeopleteRustGoToDefinition(mode)
             break
         endif
     endfor
-    call delete(l:buf)
 endfunction
 
 function! s:warn(message)
