@@ -73,7 +73,7 @@ class Source(Base):
                 'complete-with-snippet',
                 str(line),
                 str(column),
-                content.name,
+                os.path.dirname(content.name),
                 buf.name
             ]
 
