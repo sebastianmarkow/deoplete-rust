@@ -6,6 +6,9 @@ import subprocess
 import tempfile
 
 from .base import Base
+from deoplete.logger import getLogger
+
+logger = getLogger('rust')
 
 VAR_RACER_BINARY = 'deoplete#sources#rust#racer_binary'
 VAR_RUST_SOURCE = 'deoplete#sources#rust#rust_source_path'
@@ -47,12 +50,11 @@ class Source(Base):
         matches = [line[6:] for line in lines if line.startswith('MATCH')]
 
         for match in matches:
-            tokens = formatDoc(match)
+            tokens = match.split(",")
             candidate = {
                 'word': tokens[0],
-                'kind': tokens[5],
-                'menu': tokens[6],
-                'info': tokens[7],  # FIXME(SK): Preview info formatting
+                'kind': tokens[4].lower(),
+                'menu': tokens[5],
                 'dup': 1,
             }
             candidates.append(candidate)
@@ -70,7 +72,7 @@ class Source(Base):
 
             args = [
                 self.__racer,
-                'complete-with-snippet',
+                'complete',
                 str(line),
                 str(column),
                 os.path.dirname(content.name),
@@ -90,11 +92,3 @@ class Source(Base):
     def __check_binary(self):
         """Missing"""
         return os.path.isfile(self.__racer) and os.environ.get('RUST_SRC_PATH')
-
-
-def formatDoc(text):
-    """Missing"""
-    text = text.replace("\;", "{PLACEHOLDER}")
-    parts = text.split(";")
-    parts = list(map(lambda x: x.replace("{PLACEHOLDER}", ";"), parts))
-    return parts
