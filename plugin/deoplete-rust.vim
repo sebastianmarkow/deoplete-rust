@@ -30,6 +30,8 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
         execute bufwinnr(a:filename) . 'wincmd w'
     endif
 
+    " FIXME(SK): Throws error if buffer has been modified but changes
+    " have not been written to disk yet
     exec 'edit '.a:filename
     call cursor(a:line_nr, a:column_nr)
 
