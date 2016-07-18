@@ -85,6 +85,7 @@ function! s:openView(mode, position, content)
     setlocal nocursorcolumn
     setlocal iskeyword+=:
     setlocal iskeyword-=-
+    setlocal conceallevel=3
 
     setlocal modifiable
     %delete _
