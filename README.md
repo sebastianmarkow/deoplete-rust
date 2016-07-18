@@ -26,7 +26,7 @@ Copy binary to `./target/release/racer` to a location of your choosing.
 ### Get Rust source code
 ~~~
 mkdir -p choose/a/path
-git clone https://github.com/rust-lang/rust.git
+git clone --depth=1 https://github.com/rust-lang/rust.git
 ~~~
 
 ### Install Deoplete
@@ -54,7 +54,8 @@ git clone --depth=1 https://github.com/sebastianmarkow/deoplete-rust.git path/to
 ~~~
 
 ## Configuration (`init.vim`)
-Set fully qualified path to `racer` binary
+Set fully qualified path to `racer` binary. If it is in your `PATH` already use
+`which racer`.
 ~~~
 let g:deoplete#sources#rust#racer_binary='/path/to/racer'
 ~~~
