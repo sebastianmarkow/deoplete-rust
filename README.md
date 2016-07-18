@@ -20,7 +20,7 @@ git clone https://github.com/phildawes/racer.git; cd racer
 cargo build --release
 ~~~
 
-Copy binary to `./target/release/racer` to location of your choosing.
+Copy binary to `./target/release/racer` to a location of your choosing.
 (e.g. to `/usr/local/bin`)
 
 ### Get Rust source code
@@ -30,7 +30,7 @@ git clone https://github.com/rust-lang/rust.git
 ~~~
 
 ### Install Deoplete
-For details see the [installation guide](https://github.com/Shougo/deoplete.nvim#installation)
+For details see the [installation guide][installdeoplete]
 
 ## Installation
 ### with `vim-plug`
@@ -78,11 +78,12 @@ nmap <buffer> K  <plug>DeopleteRustShowDocumentation
 ~~~
 
 Additional methods to bind
-~~~
-DeopleteRustGoToDefinitionSplit  " Open definition in horizontal split
-DeopleteRustGoToDefinitionVSplit " Open definition in vertical split
-DeopleteRustGoToDefinitionTab    " Open definition in new tab
-~~~
+
+Method                             | Action
+---                                | ---
+`DeopleteRustGoToDefinitionSplit`  | Open definition in horizontal split
+`DeopleteRustGoToDefinitionVSplit` | Open definition in vertical split
+`DeopleteRustGoToDefinitionTab`    | Open definition in new tab
 
 #### `gd` Go to definition
 Jump to definition of the current element under the cursor.
@@ -98,6 +99,7 @@ You don't have to remember it all. Run `:help deoplete-rust`.
 deoplete-rust is licensed under MIT License.
 For additional information, see `LICENSE` file.
 
+[installdeoplete]: https://github.com/Shougo/deoplete.nvim#installation
 [racer]: https://github.com/phildawes/racer
 [neovim]: https://github.com/neovim/neovim
 [deoplete]: https://github.com/Shougo/deoplete.nvim
