@@ -1,0 +1,123 @@
+*deoplete-rust.txt*  Rust auto-completion via Racer/Deoplete
+
+Author:  Sebastian Klatt <sebastian@markow.io>
+License: MIT License
+
+==============================================================================
+CONTENTS                                                       *deoplete-rust*
+
+    Introduction............................: |deoplete-rust-introduction|
+    Requirements............................: |deoplete-rust-requirements|
+    Configuration...........................: |deoplete-rust-configuration|
+    Usage...................................: |deoplete-rust-usage|
+    Issues..................................: |deoplete-rust-issues|
+
+==============================================================================
+REQUIREMENTS                                      *deoplete-rust-requirements*
+
+These are the requirements to have rust autocompletion in neovim
+
+    racer             <https://github.com/phildawes/racer>
+    rust source code  <https://github.com/rust-lang/rust>
+    deoplete          <https://github.com/Shougo/deoplete.nvim>
+
+------------------------------------------------------------------------------
+Install racer
+
+With cargo:
+>
+    cargo install racer
+<
+
+From source:
+>
+    git clone https://github.com/phildawes/racer.git; cd racer
+    cargo build --release
+<
+Copy binary to ./target/release/racer to a location of your choosing.
+(e.g. to /usr/local/bin)
+
+------------------------------------------------------------------------------
+Get Rust source code
+
+Clone from github:
+>
+    mkdir -p choose/a/path
+    git clone --depth=1 https://github.com/rust-lang/rust.git
+<
+
+------------------------------------------------------------------------------
+Install Deoplete
+
+For details see the installation guide.
+<https://github.com/Shougo/deoplete.nvim#installation>
+
+==============================================================================
+CONFIGURATION                                    *deoplete-rust-configuration*
+
+g:deoplete#sources#rust#racer_binary    *g:deoplete#sources#rust#racer_binary*
+                This variable sets the full path to the racer binary.
+                e.g. `/usr/bin/racer` or `$HOME/.cargo/bin/racer`
+
+                                    *g:deoplete#sources#rust#rust_source_path*
+g:deoplete#sources#rust#rust_source_path
+                This variable sets the full path to the rust source.
+                e.g. `$HOME/rust/src`
+
+                                      *g:deoplete#sources#rust#disable_keymap*
+g:deoplete#sources#rust#disable_keymap
+                Set to 1 to disable default keymaps.
+                See |deoplete-rust-mappings|.
+
+                            *g:deoplete#sources#rust#documentation_max_height*
+g:deoplete#sources#rust#documentation_max_height
+                Set the max height of the documentation preview.
+                Default: 20
+
+==============================================================================
+MAPPINGS                                              *deoplete-rust-mappings*
+
+gd              Jumps to definition of the current element under the cursor.
+                Reuses the current window if possible.
+
+K               If further documentation exists, it will open a new window and
+                display the content.
+                Press `q`, `esc` or `cr`/`enter` to dismiss the window.
+
+These are the default keymaps.
+(to disable, see |g:deoplete#sources#rust#disable_keymap|)
+
+------------------------------------------------------------------------------
+Additional commands
+
+Open definition in horizontal split window.
+>
+    <Plug>DeopleteRustGoToDefinitionSplit
+<
+
+Open definition in vertical split window.
+>
+    <Plug>DeopleteRustGoToDefinitionVSplit
+<
+
+Open definition in a new tab.
+>
+    <Plug>DeopleteRustGoToDefinitionTab
+<
+
+------------------------------------------------------------------------------
+Example
+
+Map `gd` to open definition in a horizontal split window.
+>
+    aug rust-mapping
+    au!
+    au filetype rust nmap <buffer> gd <Plug>DeopleteRustGoToDefinitionSplit
+    aug end
+<
+
+==============================================================================
+ISSUES                                                  *deoplete-rust-issues*
+
+Any issues and suggestions are welcome on the Github bugtracker
+https://github.com/sebastianmarkow/deoplete-rust/issues
