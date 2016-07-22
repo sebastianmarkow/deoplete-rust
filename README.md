@@ -3,6 +3,8 @@
 [Neovim][neovim]/[Deoplete][deoplete] auto-completion source for [Rust][rust]
 via [Racer][racer].
 
+![Screencast](http://gifyu.com/images/ezgif-1529752735.gif)
+
 ## Requirements
 * [Rust][rust] source code
 * [Racer][racer]
