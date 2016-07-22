@@ -7,7 +7,7 @@ Auto-completion:
 ![Screenshot auto-completion](https://s31.postimg.org/yilwwkz5n/Bildschirmfoto_2016_07_22_um_21_56_36.png)
 
 Documentation:
-![Screenshot documentation](https://s31.postimg.org/9vgs6oe9n/Bildschirmfoto_2016_07_22_um_21_57_12.png)
+![Screenshot documentation](https://s31.postimg.org/aeezddlm3/Bildschirmfoto_2016_07_22_um_23_54_10.png)
 
 ## Requirements
 * [Rust][rust] source code
