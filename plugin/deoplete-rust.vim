@@ -21,18 +21,18 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
     if a:mode ==# 'tab'
         if bufloaded(a:filename) == 0
             tab split
+            exec 'edit '.a:filename
         endif
     elseif a:mode ==# 'split'
         split
+        exec 'edit '.a:filename
     elseif a:mode ==# 'vsplit'
         vsplit
+        exec 'edit '.a:filename
     elseif bufloaded(a:filename) != 0 && bufwinnr(a:filename) != -1
         execute bufwinnr(a:filename) . 'wincmd w'
     endif
 
-    " FIXME(SK): Throws error if buffer has been modified but changes
-    " have not been written to disk yet
-    exec 'edit '.a:filename
     call cursor(a:line_nr, a:column_nr)
 
     normal! zz
