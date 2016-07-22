@@ -11,7 +11,12 @@ endif
 runtime! syntax/html.vim
 unlet! b:current_syntax
 
-syntax include @markdownHighlightRust syntax/rust.vim
+let s:syntax_rust_loaded=1
+try
+    syntax include @markdownHighlightRust syntax/rust.vim
+catch
+    let s:syntax_rust_loaded=0
+endtry
 
 syntax sync minlines=10
 syntax case ignore
@@ -23,12 +28,12 @@ syntax cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdo
 
 syntax match markdownHeadingRule "^[=-]\+$" contained
 
-syntax region markdownH1 matchgroup=markdownHeadingDelimiter start="^\s*#\s*"      end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink,markdownCodeRust contained
-syntax region markdownH2 matchgroup=markdownHeadingDelimiter start="^\s*##\s*"     end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink,markdownCodeRust contained
-syntax region markdownH3 matchgroup=markdownHeadingDelimiter start="^\s*###\s*"    end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH4 matchgroup=markdownHeadingDelimiter start="^\s*####\s*"   end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH5 matchgroup=markdownHeadingDelimiter start="^\s*#####\s*"  end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH6 matchgroup=markdownHeadingDelimiter start="^\s*######\s*" end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
+syntax region markdownH1 matchgroup=markdownHeadingDelimiter start="^\s*#\s*"      end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink,markdownCodeRust
+syntax region markdownH2 matchgroup=markdownHeadingDelimiter start="^\s*##\s*"     end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink,markdownCodeRust
+syntax region markdownH3 matchgroup=markdownHeadingDelimiter start="^\s*###\s*"    end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink
+syntax region markdownH4 matchgroup=markdownHeadingDelimiter start="^\s*####\s*"   end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink
+syntax region markdownH5 matchgroup=markdownHeadingDelimiter start="^\s*#####\s*"  end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink
+syntax region markdownH6 matchgroup=markdownHeadingDelimiter start="^\s*######\s*" end="$" concealends oneline contained contains=@markdownInline,markdownAutomaticLink
 
 syntax match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
@@ -50,7 +55,7 @@ syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ en
 syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
 syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
-syntax region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
+syntax region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart,markdownCodeRust concealends
 syntax region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
 syntax region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained conceal
 syntax region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline concealends
@@ -62,8 +67,8 @@ syntax region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\
 syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart concealends
 syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart concealends
 
-syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`"           end="`" keepend contains=@markdownHighlightRust concealends
-syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`` \="       end=" \=``" keepend contains=@markdownHighlightRust concealends
+syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`"           end="`" keepend concealends contains=@markdownHighlightRust
+syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`` \="       end=" \=``" keepend concealends contains=@markdownHighlightRust
 syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="^\s*```*.*$" end="^\s*```*\ze\s*$" keepend contains=@markdownHighlightRust
 
 syntax match markdownFootnote "\[^[^\]]\+\]"
