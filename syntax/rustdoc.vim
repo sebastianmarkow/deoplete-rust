@@ -11,6 +11,8 @@ endif
 runtime! syntax/html.vim
 unlet! b:current_syntax
 
+syntax include @markdownHighlightRust syntax/rust.vim
+
 syntax sync minlines=10
 syntax case ignore
 
@@ -19,23 +21,20 @@ syntax match markdownLineStart "^[<@]\@!" nextgroup=@markdownBlock
 syntax cluster markdownBlock contains=markdownH1,markdownH2,markdownH3,markdownH4,markdownH5,markdownH6,markdownBlockquote,markdownListMarker,markdownOrderedListMarker,markdownCodeBlock,markdownRule
 syntax cluster markdownInline contains=markdownLineBreak,markdownLinkText,markdownItalic,markdownBold,markdownCode,markdownEscape,markdownError
 
-syntax match markdownH1 "^.\+\n=\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
-syntax match markdownH2 "^.\+\n-\+$" contained contains=@markdownInline,markdownHeadingRule,markdownAutomaticLink
-
 syntax match markdownHeadingRule "^[=-]\+$" contained
 
-syntax region markdownH1 matchgroup=markdownHeadingDelimiter start="##\@!"      end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH2 matchgroup=markdownHeadingDelimiter start="###\@!"     end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH3 matchgroup=markdownHeadingDelimiter start="####\@!"    end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH4 matchgroup=markdownHeadingDelimiter start="#####\@!"   end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH5 matchgroup=markdownHeadingDelimiter start="######\@!"  end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
-syntax region markdownH6 matchgroup=markdownHeadingDelimiter start="#######\@!" end="#*\s*$" keepend oneline contains=@markdownInline,markdownAutomaticLink contained
+syntax region markdownH1 matchgroup=markdownHeadingDelimiter start="^\s*#\s*"      end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink,markdownCodeRust contained
+syntax region markdownH2 matchgroup=markdownHeadingDelimiter start="^\s*##\s*"     end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink,markdownCodeRust contained
+syntax region markdownH3 matchgroup=markdownHeadingDelimiter start="^\s*###\s*"    end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
+syntax region markdownH4 matchgroup=markdownHeadingDelimiter start="^\s*####\s*"   end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
+syntax region markdownH5 matchgroup=markdownHeadingDelimiter start="^\s*#####\s*"  end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
+syntax region markdownH6 matchgroup=markdownHeadingDelimiter start="^\s*######\s*" end="$" concealends oneline contains=@markdownInline,markdownAutomaticLink contained
 
 syntax match markdownBlockquote ">\%(\s\|$\)" contained nextgroup=@markdownBlock
 
 syntax region markdownCodeBlock start="    \|\t" end="$" contained
 
-syntax match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained
+syntax match markdownListMarker "\%(\t\| \{0,4\}\)[-*+]\%(\s\+\S\)\@=" contained conceal cchar=•
 syntax match markdownOrderedListMarker "\%(\t\| \{0,4}\)\<\d\+\.\%(\s\+\S\)\@=" contained
 
 syntax match markdownRule "\* *\* *\*[ *]*$" contained
@@ -43,28 +42,29 @@ syntax match markdownRule "- *- *-[ -]*$" contained
 
 syntax match markdownLineBreak " \{2,\}$"
 
-syntax region markdownIdDeclaration matchgroup=markdownLinkDelimiter start="^ \{0,3\}!\=\[" end="\]:" oneline keepend nextgroup=markdownUrl skipwhite
+" Concel completely
+syntax region markdownIdDeclaration matchgroup=markdownLinkDelimiter start="^ \{0,3\}!\=\[" end="\]:\s*" oneline keepend nextgroup=markdownUrl skipwhite conceal
 syntax match markdownUrl "\S\+" nextgroup=markdownUrlTitle skipwhite contained
 syntax region markdownUrl matchgroup=markdownUrlDelimiter start="<" end=">" oneline keepend nextgroup=markdownUrlTitle skipwhite contained
 syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+"+ end=+"+ keepend contained
 syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+'+ end=+'+ keepend contained
 syntax region markdownUrlTitle matchgroup=markdownUrlTitleDelimiter start=+(+ end=+)+ keepend contained
 
-syntax region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart
-syntax region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained
-syntax region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained
-syntax region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
+syntax region markdownLinkText matchgroup=markdownLinkTextDelimiter start="!\=\[\%(\_[^]]*]\%( \=[[(]\)\)\@=" end="\]\%( \=[[(]\)\@=" nextgroup=markdownLink,markdownId skipwhite contains=@markdownInline,markdownLineStart concealends
+syntax region markdownLink matchgroup=markdownLinkDelimiter start="(" end=")" contains=markdownUrl keepend contained conceal
+syntax region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend contained conceal
+syntax region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline concealends
 
-execute 'syntax region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart concealends'
-execute 'syntax region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart concealends'
-execute 'syntax region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic concealends'
-execute 'syntax region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart,markdownItalic concealends'
-execute 'syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart concealends'
-execute 'syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart concealends'
+syntax region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart concealends
+syntax region markdownItalic matchgroup=markdownItalicDelimiter start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart concealends
+syntax region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart,markdownItalic concealends
+syntax region markdownBold matchgroup=markdownBoldDelimiter start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart,markdownItalic concealends
+syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart concealends
+syntax region markdownBoldItalic matchgroup=markdownBoldItalicDelimiter start="\S\@<=___\|___\S\@=" end="\S\@<=___\|___\S\@=" keepend contains=markdownLineStart concealends
 
-syntax region markdownCode matchgroup=markdownCodeDelimiter start="`" end="`" keepend contains=markdownLineStart
-syntax region markdownCode matchgroup=markdownCodeDelimiter start="`` \=" end=" \=``" keepend contains=markdownLineStart
-syntax region markdownCode matchgroup=markdownCodeDelimiter start="^\s*```*.*$" end="^\s*```*\ze\s*$" keepend
+syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`"           end="`" keepend contains=@markdownHighlightRust concealends
+syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="`` \="       end=" \=``" keepend contains=@markdownHighlightRust concealends
+syntax region markdownCodeRust matchgroup=markdownCodeDelimiter start="^\s*```*.*$" end="^\s*```*\ze\s*$" keepend contains=@markdownHighlightRust
 
 syntax match markdownFootnote "\[^[^\]]\+\]"
 syntax match markdownFootnoteDefinition "^\[^[^\]]\+\]:"
@@ -89,11 +89,11 @@ highlight def link markdownFootnote              Typedef
 highlight def link markdownFootnoteDefinition    Typedef
 
 highlight def link markdownLinkText              htmlLink
-highlight def link markdownIdDeclaration         Typedef
-highlight def link markdownId                    Type
-highlight def link markdownAutomaticLink         markdownUrl
-highlight def link markdownUrl                   Float
-highlight def link markdownUrlTitle              String
+highlight def link markdownIdDeclaration         htmlLink
+highlight def link markdownId                    htmlLink
+highlight def link markdownAutomaticLink         htmlLink
+highlight def link markdownUrl                   htmlLink
+highlight def link markdownUrlTitle              htmlLink
 highlight def link markdownIdDelimiter           markdownLinkDelimiter
 highlight def link markdownUrlDelimiter          htmlTag
 highlight def link markdownUrlTitleDelimiter     Delimiter

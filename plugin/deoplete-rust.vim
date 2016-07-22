@@ -46,7 +46,7 @@ function! s:formatDoc(text)
     let l:tokens = add(l:tokens[:6], l:desc)
     let l:tokens = map(copy(l:tokens), 'substitute(v:val, '''.l:placeholder.''', '';'', ''g'')')
 
-    let l:doc = l:tokens[0].' ['.l:tokens[5]."]\n\n```\n".l:tokens[6]."\n```"
+    let l:doc = '# '.l:tokens[0].' ['.l:tokens[5].']: `'.l:tokens[6].'`'
 
     if l:tokens[7] !=# ''
         let l:doc = l:doc."\n\n".l:tokens[7]
@@ -85,7 +85,8 @@ function! s:openView(mode, position, content)
     setlocal nocursorcolumn
     setlocal iskeyword+=:
     setlocal iskeyword-=-
-    setlocal conceallevel=3
+    setlocal conceallevel=2
+    setlocal concealcursor=nvic
 
     setlocal modifiable
     %delete _
@@ -118,7 +119,7 @@ function! s:DeopleteRustShowDocumentation()
     call winrestview(l:view)
 
     for l:line in split(l:result, "\\n")
-        if l:result =~# ' error: ' && l:line !=? 'end'
+        if l:result =~# 'ERROR:'
             call s:warn(l:line)
             break
         elseif l:line =~? '^MATCH'
@@ -146,7 +147,7 @@ function! s:DeopleteRustGoToDefinition(mode)
     call delete(l:buf)
 
     for l:line in split(l:result, '\\n')
-        if l:result =~# ' error: ' && l:line !=? 'end'
+        if l:result =~# 'ERROR:'
             call s:warn(l:line)
             break
         elseif l:line =~? '^MATCH'
