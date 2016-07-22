@@ -92,17 +92,17 @@ Additional commands
 
 Open definition in horizontal split window.
 >
-    <Plug>DeopleteRustGoToDefinitionSplit
+<Plug>DeopleteRustGoToDefinitionSplit
 <
 
 Open definition in vertical split window.
 >
-    <Plug>DeopleteRustGoToDefinitionVSplit
+<Plug>DeopleteRustGoToDefinitionVSplit
 <
 
 Open definition in a new tab.
 >
-    <Plug>DeopleteRustGoToDefinitionTab
+<Plug>DeopleteRustGoToDefinitionTab
 <
 
 ------------------------------------------------------------------------------
@@ -110,10 +110,10 @@ Example
 
 Map `gd` to open definition in a horizontal split window.
 >
-    aug rust-mapping
-    au!
-    au filetype rust nmap <buffer> gd <Plug>DeopleteRustGoToDefinitionSplit
-    aug end
+augroup rust-mapping
+autocmd!
+autocmd filetype rust nmap <buffer> gd <Plug>DeopleteRustGoToDefinitionSplit
+augroup end
 <
 
 ==============================================================================
