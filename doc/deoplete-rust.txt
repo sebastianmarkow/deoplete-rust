@@ -58,21 +58,25 @@ CONFIGURATION                                    *deoplete-rust-configuration*
 g:deoplete#sources#rust#racer_binary    *g:deoplete#sources#rust#racer_binary*
                 This variable sets the full path to the racer binary.
                 e.g. `/usr/bin/racer` or `$HOME/.cargo/bin/racer`
+                (REQUIRED)
 
                                     *g:deoplete#sources#rust#rust_source_path*
 g:deoplete#sources#rust#rust_source_path
                 This variable sets the full path to the rust source.
                 e.g. `$HOME/rust/src`
+                (REQUIRED)
 
                                       *g:deoplete#sources#rust#disable_keymap*
 g:deoplete#sources#rust#disable_keymap
                 Set to 1 to disable default keymaps.
                 See |deoplete-rust-mappings|.
+                (OPTIONAL)
 
                             *g:deoplete#sources#rust#documentation_max_height*
 g:deoplete#sources#rust#documentation_max_height
                 Set the max height of the documentation preview.
                 Default: 20
+                (OPTIONAL)
 
 ==============================================================================
 MAPPINGS                                              *deoplete-rust-mappings*

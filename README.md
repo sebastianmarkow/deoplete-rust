@@ -61,12 +61,13 @@ git clone --depth=1 https://github.com/sebastianmarkow/deoplete-rust.git path/to
 
 ## Configuration (`init.vim`)
 Set fully qualified path to `racer` binary. If it is in your `PATH` already use
-`which racer`.
+`which racer`. (__required__)
 ~~~
 let g:deoplete#sources#rust#racer_binary='/path/to/racer'
 ~~~
 
-Set Rust source code path (when cloning from Github usually ending on `/src`)
+Set Rust source code path (when cloning from Github usually ending on `/src`).
+(__required__)
 ~~~
 let g:deoplete#sources#rust#rust_source_path='/path/to/rust/src'
 ~~~
@@ -74,6 +75,11 @@ let g:deoplete#sources#rust#rust_source_path='/path/to/rust/src'
 To disable default key mappings (`gd` & `K`) add the following
 ~~~
 let g:deoplete#sources#rust#disable_keymap=1
+~~~
+
+Set max height of documentation split.
+~~~
+let g:deoplete#sources#rust#documentation_max_height=20
 ~~~
 
 ## Usage
