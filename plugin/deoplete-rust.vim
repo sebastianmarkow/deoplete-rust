@@ -101,6 +101,10 @@ function! s:openView(mode, position, content)
 endfunction
 
 function! s:DeopleteRustShowDocumentation()
+    if !s:validEnv()
+        return
+    endif
+
     let l:view = winsaveview()
 
     normal! he
@@ -114,6 +118,11 @@ function! s:DeopleteRustShowDocumentation()
 
     let l:cmd = g:deoplete#sources#rust#racer_binary.' complete-with-snippet '.l:line_nr.' '.l:column_nr.' '.l:path.' '.l:buf
     let l:result = system(l:cmd)
+
+    if v:shell_error
+        echoerr l:result
+        return
+    endif
 
     call delete(l:buf)
     call winrestview(l:view)
@@ -134,6 +143,10 @@ function! s:DeopleteRustShowDocumentation()
 endfunction
 
 function! s:DeopleteRustGoToDefinition(mode)
+    if !s:validEnv()
+        return
+    endif
+
     let l:line_nr = line('.')
     let l:column_nr = col('.')
     let l:path = expand('%:p')
@@ -143,6 +156,11 @@ function! s:DeopleteRustGoToDefinition(mode)
 
     let l:cmd = g:deoplete#sources#rust#racer_binary.' find-definition '.l:line_nr.' '.l:column_nr.' '.l:path.' '.l:buf
     let l:result = system(l:cmd)
+
+    if v:shell_error
+        echoerr l:result
+        return
+    endif
 
     call delete(l:buf)
 
@@ -168,26 +186,26 @@ endfunction
 
 function! s:validEnv()
     if !executable(g:deoplete#sources#rust#racer_binary)
-        call s:warn('racer binary not found')
+        call s:warn('racer binary path not set (:help deoplete-rust)')
         return 0
     endif
 
     if !isdirectory($RUST_SRC_PATH)
         if !exists('g:deoplete#sources#rust#rust_source_path')
-            call s:warn('rust source not found')
+            call s:warn('rust source path not set (:help deoplete-rust)')
+            return 0
+        elseif !isdirectory(g:deoplete#sources#rust#rust_source_path)
+            call s:warn('rust source path not set (:help deoplete-rust)')
             return 0
         else
             let $RUST_SRC_PATH=g:deoplete#sources#rust#rust_source_path
         endif
     endif
+
     return 1
 endfunction
 
 function! s:DeopleteRustInit()
-    if !s:validEnv()
-        return
-    endif
-
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionDefault
         \ :call <sid>DeopleteRustGoToDefinition('')<cr>
     nnoremap <silent><buffer> <plug>DeopleteRustGoToDefinitionSplit
