@@ -75,7 +75,7 @@ class Source(Base):
                 'complete',
                 str(line),
                 str(column),
-                os.path.dirname(content.name),
+                content.name,
                 buf.name
             ]
 
