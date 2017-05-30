@@ -11,7 +11,7 @@ Documentation:
 
 ## Requirements
 * [Rust][rust] source code
-* [Racer][racer]
+* [Racer][racer] (>=2.0.0)
 * [Deoplete][deoplete]
 
 ### Install Racer
@@ -26,7 +26,7 @@ git clone https://github.com/phildawes/racer.git; cd racer
 cargo build --release
 ~~~
 
-Copy binary to `./target/release/racer` to a location of your choosing.
+Copy binary to `./target/release/racer` to a location of your choice.
 (e.g. to `/usr/local/bin`)
 
 ### Get Rust source code
