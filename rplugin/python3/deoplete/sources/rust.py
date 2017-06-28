@@ -55,6 +55,7 @@ class Source(Base):
                 'word': tokens[0],
                 'kind': tokens[4],
                 'menu': tokens[5],
+                'info': ','.join(tokens[5:]),
                 'dup': 1,
             }
             candidates.append(candidate)
