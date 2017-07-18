@@ -72,6 +72,11 @@ Set Rust source code path (when cloning from Github usually ending on `/src`).
 let g:deoplete#sources#rust#rust_source_path='/path/to/rust/src'
 ~~~
 
+Show duplicate matches.
+~~~
+let g:deoplete#sources#rust#show_duplicates=1
+~~~
+
 To disable default key mappings (`gd` & `K`) add the following
 ~~~
 let g:deoplete#sources#rust#disable_keymap=1

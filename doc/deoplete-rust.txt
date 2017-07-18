@@ -66,6 +66,13 @@ g:deoplete#sources#rust#rust_source_path
                 e.g. `$HOME/rust/src`
                 (REQUIRED)
 
+                                     *g:deoplete#sources#rust#show_duplicates*
+g:deoplete#sources#rust#show_duplicates
+                Set whether duplicate matches should be filtered.
+                Set to 0 to filter duplicates.
+                Default: 1
+                (OPTIONAL)
+
                                       *g:deoplete#sources#rust#disable_keymap*
 g:deoplete#sources#rust#disable_keymap
                 Set to 1 to disable default keymaps.

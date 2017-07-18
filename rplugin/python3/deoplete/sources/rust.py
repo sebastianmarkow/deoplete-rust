@@ -12,6 +12,7 @@ logger = getLogger('rust')
 
 VAR_RACER_BINARY = 'deoplete#sources#rust#racer_binary'
 VAR_RUST_SOURCE = 'deoplete#sources#rust#rust_source_path'
+VAR_DUPLICATION = 'deoplete#sources#rust#show_duplicates'
 
 
 class Source(Base):
@@ -26,6 +27,7 @@ class Source(Base):
         self.rank = 500
 
         self.__racer = self.vim.vars.get(VAR_RACER_BINARY)
+        self.__dup = self.vim.vars.get(VAR_DUPLICATION)
         self.__encoding = self.vim.eval('&encoding')
         self.__rust_re = re.compile(r'\w*$|(?<=")[./\-\w]*$')
 
@@ -49,6 +51,9 @@ class Source(Base):
         lines = self.__retrieve()
         matches = [line[6:] for line in lines if line.startswith('MATCH')]
 
+        if not bool(self.__dup):
+            matches = set(matches)
+
         for match in matches:
             tokens = match.split(",")
             candidate = {
@@ -56,7 +61,7 @@ class Source(Base):
                 'kind': tokens[4],
                 'menu': tokens[5],
                 'info': ','.join(tokens[5:]),
-                'dup': 1,
+                'dup': self.__dup,
             }
             candidates.append(candidate)
 

@@ -15,6 +15,9 @@ let g:deoplete#sources#rust#rust_source_path=
 let g:deoplete#sources#rust#documentation_max_height=
     \ get(g:, 'deoplete#sources#rust#documentation_max_height', 20)
 
+let g:deoplete#sources#rust#show_duplicates=
+    \ get(g:, 'deoplete#sources#rust#show_duplicates', 1)
+
 let s:buffer_nr=-1
 
 function! s:jumpTo(mode, filename, line_nr, column_nr)
