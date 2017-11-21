@@ -5,6 +5,7 @@ import re
 import subprocess
 import tempfile
 import platform
+import distutils
 
 from .base import Base
 from deoplete.logger import getLogger
@@ -125,4 +126,12 @@ class Source(Base):
 
     def __check_binary(self):
         """Missing"""
-        return os.path.isfile(self.__racer) and os.environ.get('RUST_SRC_PATH')
+        return (
+            (os.path.isfile(self.__racer) or cmd_exists(self.__racer)) and
+            os.environ.get('RUST_SRC_PATH'))
+
+def cmd_exists(cmd):
+    return any(
+        os.access(os.path.join(path, cmd), os.X_OK)
+        for path in os.environ["PATH"].split(os.pathsep)
+    )
