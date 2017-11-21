@@ -35,7 +35,7 @@ function! s:jumpTo(mode, filename, line_nr, column_nr)
 
     " FIXME(SK): Throws error if buffer has been modified but changes
     " have not been written to disk yet
-    exec 'edit '.a:filename
+    exec 'keepjumps edit '.fnameescape(a:filename)
     call cursor(a:line_nr, a:column_nr)
 
     normal! zz
@@ -114,8 +114,8 @@ function! s:DeopleteRustShowDocumentation()
 
     let l:line_nr = line('.')
     let l:column_nr = col('.')
-    let l:path = expand('%:p')
-    let l:buf = tempname()
+    let l:path = s:GetFilename()
+    let l:buf = s:GetTempName()
 
     call writefile(getline(1, '$'), l:buf)
 
@@ -152,8 +152,8 @@ function! s:DeopleteRustGoToDefinition(mode)
 
     let l:line_nr = line('.')
     let l:column_nr = col('.')
-    let l:path = expand('%:p')
-    let l:buf = tempname()
+    let l:path = s:GetFilename()
+    let l:buf = s:GetTempName()
 
     call writefile(getline(1, '$'), l:buf)
 
@@ -181,6 +181,23 @@ function! s:DeopleteRustGoToDefinition(mode)
             break
         endif
     endfor
+endfunction
+
+function! s:GetFilename()
+    return s:CygwinConvertPath(expand('%:p'))
+endfunction
+
+function! s:GetTempName()
+    return s:CygwinConvertPath(tempname())
+endfunction
+
+" Returns the filename. Handles cygwin as a special case.
+function! s:CygwinConvertPath(str)
+    if has('win32unix')
+        let res = system("cygpath --windows ".a:str)
+        return fnameescape(substitute(res, '\n\+$', '', ''))
+    endif
+    return a:str
 endfunction
 
 function! s:warn(message)

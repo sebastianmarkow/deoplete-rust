@@ -4,6 +4,7 @@ import os
 import re
 import subprocess
 import tempfile
+import platform
 
 from .base import Base
 from deoplete.logger import getLogger
@@ -13,7 +14,6 @@ logger = getLogger('rust')
 VAR_RACER_BINARY = 'deoplete#sources#rust#racer_binary'
 VAR_RUST_SOURCE = 'deoplete#sources#rust#rust_source_path'
 VAR_DUPLICATION = 'deoplete#sources#rust#show_duplicates'
-
 
 class Source(Base):
     """Deoplete Rust source"""
@@ -81,19 +81,47 @@ class Source(Base):
                 'complete',
                 str(line),
                 str(column),
-                content.name,
-                buf.name
+                self.__escape_path(content.name),
+                self.__escape_path(buf.name)
             ]
 
             results = []
 
             try:
-                results = subprocess.check_output(args) \
+                # NOTE: needs to avoid the list form of calling 'check_output'
+                # because quotes was NOT preserved. See StackOverlow post.
+                # https://stackoverflow.com/a/39096422/3325787
+                cmd = " ".join(args)
+                results = subprocess.check_output(cmd, shell=True) \
                     .decode(self.__encoding).splitlines()
             except Exception:
                 pass
 
             return results
+
+    def __escape_path(self, path):
+        """
+        Handles Cygwin case.
+
+        path(String): path to escape.
+        Returns: string of new path to use.
+        """
+        if "cygwin" not in platform.system().lower():
+            return path
+        args = [
+            "cygpath", "--windows", path
+        ]
+        try:
+            results = subprocess.check_output(args) \
+                .decode(self.__encoding).splitlines()
+        except Exception:
+            pass
+        # In the error path, best-effort is to try 'path'.
+        if results is None or len(results) == 0:
+          return path
+        # TODO: find something like vim's fnameescape instead of just
+        # surrounding with quotes.
+        return '"' + results[0] + '"'
 
     def __check_binary(self):
         """Missing"""
