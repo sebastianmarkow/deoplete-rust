@@ -30,6 +30,12 @@ Copy binary to `./target/release/racer` to a location of your choice.
 (e.g. to `/usr/local/bin`)
 
 ### Get Rust source code
+#### with `rustup`
+~~~
+rustup component add rust-src
+~~~
+
+#### from Git
 ~~~
 mkdir -p choose/a/path
 git clone --depth=1 https://github.com/rust-lang/rust.git
