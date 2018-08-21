@@ -56,14 +56,15 @@ class Source(Base):
 
         for match in matches:
             tokens = match.split(",")
-            candidate = {
-                'word': tokens[0],
-                'kind': tokens[4],
-                'menu': tokens[5],
-                'info': ','.join(tokens[5:]),
-                'dup': self.__dup,
-            }
-            candidates.append(candidate)
+            if len(tokens) > 5:
+                candidate = {
+                    'word': tokens[0],
+                    'kind': tokens[4],
+                    'menu': tokens[5],
+                    'info': ','.join(tokens[5:]),
+                    'dup': self.__dup,
+                }
+                candidates.append(candidate)
 
         return candidates
 
