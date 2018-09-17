@@ -7,10 +7,10 @@ let s:save_cpoptions = &cpoptions
 set cpoptions&vim
 
 let g:deoplete#sources#rust#racer_binary=
-    \ get(g:, 'deoplete#sources#rust#racer_binary', '')
+    \ expand(get(g:, 'deoplete#sources#rust#racer_binary', ''))
 
 let g:deoplete#sources#rust#rust_source_path=
-    \ get(g:, 'deoplete#sources#rust#rust_source_path', '')
+    \ expand(get(g:, 'deoplete#sources#rust#rust_source_path', ''))
 
 let g:deoplete#sources#rust#documentation_max_height=
     \ get(g:, 'deoplete#sources#rust#documentation_max_height', 20)
